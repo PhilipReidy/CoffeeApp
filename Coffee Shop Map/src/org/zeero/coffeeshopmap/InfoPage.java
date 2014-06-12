@@ -37,22 +37,21 @@ public class InfoPage extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	//	overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		setContentView(R.layout.info_page);
 		
-		DoPOST mDoPOST = new DoPOST(InfoPage.this, "the-sugar-cube");
+		Bundle extras = getIntent().getExtras();
+		if (extras == null) {
+			return;
+		}
+		
+		double Latitude = extras.getDouble("Latitude");
+		double Longitude = extras.getDouble("Longitude");
+		
+		DoPOST mDoPOST = new DoPOST(InfoPage.this, Latitude, Longitude);
 		mDoPOST.execute("");
 		
 		textViewFirstName = (TextView) findViewById(R.id.textView1);
 		textViewLastName = (TextView) findViewById(R.id.textView2);
-		
-//		loadHTML();
-		
-//		WebView mWebView;
-//	    mWebView = (WebView) findViewById(R.id.webview);
-//	    mWebView.getSettings().setJavaScriptEnabled(true);
-//	    mWebView.loadUrl("file:///android_asset/new.html");
-//	    mWebView.getSettings().setBuiltInZoomControls(true);
 		
 
 	}
@@ -67,12 +66,13 @@ public class InfoPage extends Activity {
 		
 		Exception exception = null;
 		private String strTitle;
-		private String strLat;
-		private String strLong;
+		private double strLat;
+		private double strLong;
 		
-		DoPOST(Context context, String uid){
+		DoPOST(Context context, double latitude, double longitude){
 			mContext = context;
-			strUid = uid;
+			strLat = latitude;
+			strLong = longitude;
 		}
 
 		@Override
@@ -82,7 +82,7 @@ public class InfoPage extends Activity {
 
 				//Setup the parameters
 				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair("uid", strUid));	
+				nameValuePairs.add(new BasicNameValuePair("latitude", strLat + ""));	
 				//Add more parameters as necessary
 
 				//Create the HTTP request
@@ -104,7 +104,7 @@ public class InfoPage extends Activity {
 				JSONArray jsonArray = new JSONArray(result);
 
 				//Retrieve the data from the JSON object
-				strUid = jsonArray.getJSONObject(0).getString("uid");
+//				strUid = jsonArray.getJSONObject(0).getString("uid");
 				strTitle = jsonArray.getJSONObject(0).getString("title");
 //				strLat = JSONArray.getString("latitude");
 //				strLong = JSONArray.getString("longitude");
@@ -135,13 +135,4 @@ public class InfoPage extends Activity {
 
 	}
 }
-
-	
-//	public void loadHTML() {
-//	    final String mimeType = "text/html";
-//	    final String encoding = "utf-8";
-//	    final String html = "<h1>Header</h1><p>This is HTML in a string</p>";
-//	    
-//	    WebView wv = (WebView) findViewById(R.id.webview);
-//	    wv.loadDataWithBaseURL("file:///android_asset/images/photo_3.jpg", html, mimeType, encoding, "");
 

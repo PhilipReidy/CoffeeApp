@@ -6,9 +6,11 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +49,7 @@ public class FragmentOne extends Fragment {
 	        getFragmentManager().beginTransaction().remove(f).commit();
 	    }
 
-	    super.onPause();        
+	    super.onPause();
 	}
 
     private void initilizeMap() {
@@ -71,12 +73,16 @@ public class FragmentOne extends Fragment {
         googleMap.addMarker(new MarkerOptions().position(new LatLng(51.8967939,-8.4735388)).title("Caseys Cafe").snippet("Grand Parade"));
         googleMap.addMarker(new MarkerOptions().position(new LatLng(51.8977406,-8.4748906)).title("Cafe Gusto").snippet("Washington Street"));
         googleMap.addMarker(new MarkerOptions().position(new LatLng(51.9001173,-8.4715754)).title("Costa Coffee").snippet("Emmett Place"));
+       final Marker Sugar = googleMap.addMarker(new MarkerOptions().position(new LatLng(51.896008,-8.473426)).title("The Sugar Cube").snippet("Grand Parade"));
         
         googleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 
 			@Override
 			public void onInfoWindowClick(Marker arg0) {
 				Intent intent = new Intent(getActivity(), InfoPage.class);
+				intent.putExtra("Latitude", arg0.getPosition().latitude);
+				intent.putExtra("Longitude", arg0.getPosition().longitude);
+				Log.d("latitude", "" + arg0.getPosition().latitude);
 			    startActivity(intent);
 				
 			}
